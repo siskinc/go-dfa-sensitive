@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestNewTrieTree(t *testing.T) {
+func TestTrieTree_ReplaceChar(t *testing.T) {
 	tree := NewTrieTree()
 	tree.AddOneWord("fuck")
 	tree.AddOneWord("fuck you")
@@ -17,4 +17,13 @@ func TestNewTrieTree(t *testing.T) {
 	fmt.Printf("result: %s\n", tree.ReplaceChar("草泥马", "*"))
 	fmt.Printf("result: %s\n", tree.ReplaceChar("马草泥", "*"))
 	fmt.Printf("result: %s\n", tree.ReplaceChar("草草马泥", "*"))
+}
+
+func TestTrieTree_SetTreeByFile(t1 *testing.T) {
+	tree := NewTrieTree()
+	err := tree.SetTreeByFile("./test-data/words.txt")
+	if err != nil {
+		fmt.Printf("err: %v\n", err)
+	}
+	fmt.Printf("result: %s\n", tree.ReplaceChar("安局办公楼123", "*"))
 }

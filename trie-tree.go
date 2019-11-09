@@ -6,6 +6,7 @@ import (
 	"errors"
 	"io"
 	"os"
+	"strings"
 )
 
 type TrieNode struct {
@@ -68,6 +69,7 @@ func (t *TrieTree) SetTreeByFile(filename string) (err error) {
 	var line string
 	for {
 		line, err = reader.ReadString('\n')
+		line = strings.Trim(line, " \r\n")
 		t.AddOneWord(line)
 		if nil != err {
 			break
@@ -75,6 +77,8 @@ func (t *TrieTree) SetTreeByFile(filename string) (err error) {
 	}
 	if !errors.Is(err, io.EOF) {
 		return err
+	} else {
+		err = nil
 	}
 	return
 }
