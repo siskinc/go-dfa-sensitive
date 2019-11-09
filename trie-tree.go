@@ -44,8 +44,8 @@ func (t *TrieTree) AddOneWord(word string) {
 		if !exist {
 			newRoot = NewTrieNode(string([]rune{c}))
 			root.SonMap[c] = newRoot
-			root = newRoot
 		}
+		root = newRoot
 	}
 	if root != t.Root {
 		root.IsLeaf = true
@@ -104,29 +104,27 @@ func (t *TrieTree) IsLegal(content string) bool {
 func (t *TrieTree) ReplaceChar(content, charReplacer string) string {
 	contentRune := []rune(content)
 	buffer := bytes.NewBuffer(nil)
-	for i := 0; i < len(contentRune); i++ {
-		c := contentRune[i]
-		root, exist := t.Root.SonMap[c]
-		if !exist {
-			buffer.WriteString(content[i : i+1])
-			continue
-		}
-		if root.IsLeaf {
-			buffer.WriteString(charReplacer)
-			continue
-		}
-		for j := i + 1; j < len(contentRune); j++ {
-			nc := contentRune[j]
-			root, exist = root.SonMap[nc]
+	for i := 0; i < len(contentRune); {
+		root, exist := t.Root, false
+		haveLegal := false
+		for j := i; j < len(contentRune); j++ {
+			c := contentRune[j]
+			root, exist = root.SonMap[c]
 			if !exist {
 				break
 			}
 			if root.IsLeaf {
-				for k := 0; k < j+1-i; k++ {
+				for k := 0; k < j-i+1; k++ {
 					buffer.WriteString(charReplacer)
 				}
-				i = j
+				i = j + 1
+				haveLegal = true
+				continue
 			}
+		}
+		if !haveLegal {
+			buffer.WriteString(string(contentRune[i : i+1]))
+			i++
 		}
 	}
 	return buffer.String()
